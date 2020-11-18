@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using System.IO;
-using System.Diagnostics;
-using System.Runtime.Serialization; 
-using System.Xml.Serialization;
-
 
 namespace CouponsToHqs
 {class Program
@@ -16,6 +9,7 @@ namespace CouponsToHqs
   {
       Retailer Retailer=new Retailer();
 
+    //read values from csv file and generate objects
        using(var reader = new StreamReader(@"C:\Users\chatz\OneDrive\Έγγραφα\GitHub\CouponsToHqs\tests.csv"))
     {
     
@@ -33,12 +27,8 @@ namespace CouponsToHqs
             ValidationRules.EndDate=values[3];
             Document.Details=Details;
             Document.ValidationRules=ValidationRules;
-            Retailer.Documents.Add(Document);
-           
+            Retailer.Documents.Add(Document);  
         }
-
-        
-
     }
   
     foreach (var Document in Retailer.Documents)
@@ -49,17 +39,15 @@ namespace CouponsToHqs
              Console.WriteLine(" ");
         }
     
-    //Retailer.Documents=DocumentsList;
     LoyaltyDocuments LoyaltyDocuments=new LoyaltyDocuments();
     LoyaltyDocuments.Retailer=Retailer;
-
-        
+   
     WriteXML(LoyaltyDocuments);
-
     }
+
+    //Serialize object and create xml
     public static void WriteXML(LoyaltyDocuments LoyaltyDocuments)  
     {  
-         
         System.Xml.Serialization.XmlSerializer writer =
             new System.Xml.Serialization.XmlSerializer(typeof(LoyaltyDocuments));  
   
@@ -68,67 +56,8 @@ namespace CouponsToHqs
   
         writer.Serialize(file, LoyaltyDocuments);  
         file.Close();  
-    }  
     }
 
-
-public class LoyaltyDocuments{
-
-    
-    [XmlAttribute]
-    public String Action { get; set; }="I";
-
-     
-    public Retailer Retailer{get; set;}
-}
-
-public class Retailer{
-
-    [XmlAttribute]
-    public String Id { get; set; }="1";
-
-    
-    public List<Document> Documents{get; set;}
-
-    public Retailer(){
-        this.Documents=new List<Document>();
     }
-}
-
-    
-
-public class Details{
-    public String Type{ get ; set; }="3";
-    public String Action{ get; set; }="0";
-    public String Barcode{ get; set; }
-    public String ID{ get; set; }
-    public String IsUnique{ get; set; }="0";
-    public String TriggerPromotionId{ get; set; }="0";
-    public String Value{ get; set; }="0.0000";
-    public String Qty{ get; set; }="1";
-    public String TenderGroup{ get; set; }="1";
-    public String BarcodeProgrammingId{ get; set; }="5";
-
-
-    
-
-}
-
-public class ValidationRules{
-    public String StartDate{ get; set; }
-    public String EndDate{ get; set; }
-    public String RedemptionType{ get; set; }="2";
-    public String RedemptionLocation{ get; set; }="2";
-    public String RedemptionMode{ get; set; }="1";
-}
-
-public class Document{
-    public Details Details{ get; set; }
-    public ValidationRules ValidationRules{ get; set; }
-
-}
-
-
-
 
 }
